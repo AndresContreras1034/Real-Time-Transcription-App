@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transcriptor en Tiempo Real</title>
+  <link rel="stylesheet" href="/src/css/style.css">
+  <style>
+    /* Contenedor del video y transcripción */
+    #video-container {
+      position: relative;
+      width: 80%;
+      max-width: 800px;
+      margin: 20px auto;
+    }
+
+    /* Transcripción flotante tipo panel */
+    #transcript-box {
+      position: absolute;
+      bottom: 20px;
+      left: 10px;
+      right: 10px;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 15px;
+      border-radius: 10px;
+      color: white;
+      font-size: 1rem;
+      line-height: 1.4;
+      max-height: 150px;
+      overflow-y: auto;
+      font-family: Consolas, monospace;
+      white-space: pre-wrap;
+    }
+
+    /* Palabra resaltada nueva */
+    .transcript-highlight {
+      background-color: #00bcd4;
+      color: #1e1e2f;
+      padding: 2px 4px;
+      border-radius: 3px;
+      transition: background-color 0.5s;
+    }
+
+    /* Botones de control */
+    #controls {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    #controls button {
+      padding: 8px 20px;
+      margin: 0 5px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #00bcd4;
+      color: #1e1e2f;
+      transition: background-color 0.3s;
+    }
+
+    #controls button:hover:enabled {
+      background-color: #0097a7;
+    }
+
+    #controls button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Input de archivo y reproductor */
+    #audio-file {
+      display: block;
+      margin: 15px auto;
+    }
+
+    #audio-player {
+      display: none;
+      margin-top: 10px;
+      width: 80%;
+      max-width: 800px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1 style="text-align:center; color:#00bcd4;">Transcriptor en Tiempo Real</h1>
+    </header>
+
+    <main>
+      <!-- Contenedor del video y transcripción -->
+      <div id="video-container">
+        <iframe id="youtube-video"
+                width="100%"
+                height="450"
+                src="https://www.youtube.com/embed/VIDEO_ID?enablejsapi=1"
+                frameborder="0"
+                allow="autoplay; encrypted-media"
+                allowfullscreen></iframe>
+
+        <div id="transcript-box">
+          La transcripción aparecerá aquí...
+        </div>
+      </div>
+
+      <!-- Botones de control -->
+      <div id="controls">
+        <button id="start-btn">Iniciar</button>
+        <button id="stop-btn" disabled>Detener</button>
+        <button id="save-btn">Guardar</button>
+      </div>
+
+      <!-- Subir audio local -->
+      <input type="file" id="audio-file" accept="audio/*">
+      <audio id="audio-player" controls></audio>
+    </main>
+
+    <footer>
+      <p>Transcriptor Web • Proyecto Vite</p>
+    </footer>
+  </div>
+
+  <!-- Script principal -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
