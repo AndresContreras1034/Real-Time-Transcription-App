@@ -1,5 +1,6 @@
 {
-  "name": "transcriptor-app",
+  "name": "real-time-transcription-app",
+  "description": "Browser speech transcription app with Web Speech API and configurable audio backend",
   "private": true,
   "version": "0.0.0",
   "type": "module",

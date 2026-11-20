@@ -1,97 +1,121 @@
 # Real-Time Transcription App
 
-A web application that captures audio from your microphone (or system) and transcribes it into text in real time. Built with **Vite**, modern JavaScript, and the Web Speech API. Ideal for meetings, online videos, or lectures.  
-
----
+Browser application for real-time microphone transcription using the Web Speech API. It also supports local audio playback and an optional transcription endpoint for server-side processing.
 
 ## Features
 
-- Real-time transcription: Converts spoken words to text instantly.
-- Live display: Text appears dynamically in the browser.
-- Start/Stop controls: Easily manage transcription sessions.
-- Lightweight and fast: Built with Vite for quick development and optimized performance.
-- Cross-browser support: Works on most modern browsers with microphone access.
+- Live microphone transcription
+- Interim and final recognition results
+- Start and stop controls
+- Local text display and automatic scrolling
+- Export transcript to a `.txt` file
+- Local audio file playback
+- Configurable backend endpoint for audio transcription
+- Browser capability detection
 
----
+## Architecture
 
-## Folder Structure
+```mermaid
+flowchart TD
+    USER[User] --> MIC[Microphone]
+    MIC --> SPEECH[Browser Web Speech API]
+    SPEECH --> EVENT[Recognition Events]
+    EVENT --> UI[Transcript Box]
+    UI --> SAVE[Text File Export]
 
-```
-transcriptor-app/
-│
-├─ index.html
-├─ vite.config.js
-├─ package.json
-├─ public/
-│ ├─ favicon.ico
-│ └─ assets/
-│    ├─ logo.png
-│    └─ example.mp3
-├─ src/
-│ ├─ main.js
-│ ├─ App.vue # or App.js if using vanilla JS
-│ ├─ css/
-│ │ └─ style.css
-│ ├─ components/
-│ │ └─ TranscriptBox.vue
-│ └─ utils/
-│    └─ speech.js
-├─ tests/
-│ └─ app.test.js
-└─ README.md
+    USER --> FILE[Local Audio File]
+    FILE --> PLAYER[Audio Element]
+    FILE --> BACKEND[Configured Transcription Endpoint]
+    BACKEND --> RESULT[Transcript JSON]
+    RESULT --> UI
 ```
 
----
+## Technology
 
-## Getting Started
+- Vanilla JavaScript
+- Vite
+- Web Speech API
+- Web Audio and HTML audio playback
+- Fetch API
+- Blob and download APIs
+- CSS
 
-### 1. Install Dependencies
+## Requirements
 
-```bash
+- Modern Chromium-based browser or another browser supporting Web Speech API
+- Microphone permission
+- HTTPS or `localhost`
+- Optional transcription backend for audio-file processing
+
+## Installation
+
+```powershell
 npm install
-```
-
-### 2. Run Development Server
-
-```bash
 npm run dev
 ```
-Open your browser at the URL shown in the terminal (usually http://localhost:5173).
 
-### 3. Build for Production
+Open the URL reported by Vite, normally `http://localhost:5173`.
 
-```bash
+## Production Build
+
+```powershell
 npm run build
+npm run preview
 ```
-This will generate an optimized dist/ folder ready for deployment.
 
----
+## Audio File Endpoint
 
-## Usage
+Copy `.env.example` to `.env.local`:
 
-- Click the Start button to begin capturing audio.
-- Speak into your microphone (or play system audio if configured).
-- The live transcription will appear in the text box.
-- Click Stop to end the session.
+```dotenv
+VITE_TRANSCRIPTION_ENDPOINT=http://localhost:3000/transcribe
+```
 
----
+The frontend sends a `multipart/form-data` request with a `file` field.
 
-## Notes
+The endpoint should return:
 
-- Make sure your browser has permission to access the microphone.
-- For system audio transcription, you may need a virtual audio device (e.g., VB-Audio Cable on Windows).
-- Currently optimized for modern browsers that support the Web Speech API.
+```json
+{
+  "text": "Texto transcrito"
+}
+```
 
----
+API keys and server credentials must stay in the backend. Never place a provider secret in a `VITE_*` variable.
 
-## Technologies
+## Project Structure
 
-- Vite – Fast build tool and development server
-- Web Speech API – Real-time speech recognition
-- HTML, CSS, and Vanilla JavaScript (or Vue/React optional)
+```text
+index.html
+src/
+  main.js
+  components/TranscriptBox.js
+  utils/fileSaver.js
+  css/style.css
+public/
+package.json
+.env.example
+```
 
----
+## Browser Support
 
-## License
+The Web Speech API is not implemented consistently across all browsers. In unsupported browsers, the application displays a browser compatibility message.
 
-This project is licensed under the MIT License.
+The quality of microphone recognition depends on browser support, language configuration, device, and network conditions.
+
+## Known Limitations
+
+- Microphone recognition is currently configured for `es-ES`.
+- The application does not guarantee offline recognition.
+- Audio-file transcription requires a separate backend service.
+- The repository does not implement provider authentication or transcription backend code.
+- The YouTube embed flow was removed because it was not a functional transcription source.
+- Continuous recognition behavior varies across browsers.
+- The interface has no automated tests yet.
+
+## Security
+
+- Do not add provider API keys to `src/main.js`.
+- Do not store secrets in local storage or in Vite environment variables.
+- Run audio transcription through a backend that validates file type and size.
+- Request microphone permission only from trusted origins.

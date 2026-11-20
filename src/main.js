@@ -81,19 +81,26 @@ audioInput.addEventListener("change", async (e) => {
     audioPlayer.style.display = "block";
     audioPlayer.play();
 
-    // API de transcripción (Whisper)
+    // Backend seguro de transcripción
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("model", "whisper-1");
 
     try {
-        const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
+        const transcriptionEndpoint =
+            import.meta.env.VITE_TRANSCRIPTION_ENDPOINT;
+
+        if (!transcriptionEndpoint) {
+            throw new Error("VITE_TRANSCRIPTION_ENDPOINT no está configurado");
+        }
+
+        const response = await fetch(transcriptionEndpoint, {
             method: "POST",
-            headers: {
-                Authorization: `Bearer YOUR_API_KEY`
-            },
             body: formData
         });
+
+        if (!response.ok) {
+            throw new Error(`Error del servidor: ${response.status}`);
+        }
 
         const data = await response.json();
         currentTranscript = data.text || "";
